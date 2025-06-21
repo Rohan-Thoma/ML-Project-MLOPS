@@ -1,5 +1,5 @@
 import sys
-from logger import logging #Here we are importing our custom logger , so that we will get the errors in the logs
+from src.logger import logging #Here we are importing our custom logger , so that we will get the errors in the logs
 
 
 def error_message_detail(error, error_detail:sys):

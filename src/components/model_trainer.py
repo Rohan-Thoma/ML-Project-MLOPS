@@ -56,7 +56,7 @@ class ModelTrainer:
             },
             "K-Neighbours Regression":{
                 # 'loss':['squared_error', 'huber', 'absolute_error', 'quantile'],
-                'neighbours':[5,7,9,11]
+                'n_neighbors':[5,7,9,11]
             },
             "Linear Regression":{},
             "XGBRegression":{
@@ -78,7 +78,7 @@ class ModelTrainer:
 
             model_report: dict = evaluate_models(X_train=X_train, y_train= y_train,
                                                  X_test= X_test, y_test=y_test, 
-                                                 models = models
+                                                 models = models,
                                                  param = params)
 
             #to get the best model score from dict

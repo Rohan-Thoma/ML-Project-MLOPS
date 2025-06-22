@@ -15,7 +15,7 @@ from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path: str = os.path.join('artifact', "preprocessor.pkl")
+    preprocessor_obj_file_path: str = os.path.join('artifacts', "preprocessor.pkl")
 
 class DataTransformation:
     def __init__(self):
@@ -51,15 +51,15 @@ class DataTransformation:
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
                     ("one_hot_encoder", OneHotEncoder()),
-                    ("scaler", StandardScaler())
+                    ("scaler", StandardScaler(with_mean=False))
                 ]
             )
 
             logging.info(f"categorical columns: {categorical_columns}")
 
-            preprocessor = ColumnTransformer([
-                ("numerical_pipeline", numerical_pipeline),
-                ("categorical_pipeline", categorical_pipeline)
+            preprocessor = ColumnTransformer(transformers=[
+                ("numerical_pipeline", numerical_pipeline, numerical_columns),
+                ("categorical_pipeline", categorical_pipeline, categorical_columns)
             ])
 
             return preprocessor
@@ -74,7 +74,7 @@ class DataTransformation:
             
             logging.info("reading train and test data is completed")
 
-            logging.info("Ontaining preprocessing object")
+            logging.info("Obtaining preprocessing object")
 
             preprocessing_obj = self.get_data_transformer_object()
 
@@ -92,8 +92,8 @@ class DataTransformation:
             input_feature_train_arr=preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
 
-            train_arr = np.c_[input_feature_test_arr, np.array(target_feature_train_df)]
-            test_arr = np.c_[input_feature_test_df, np.array(target_feature_test_df)]
+            train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
 
             logging.info("Saving preprocessing object")
 
